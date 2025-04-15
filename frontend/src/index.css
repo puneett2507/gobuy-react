@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+#root {
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+}
+
+.container {
+    max-width: 100%; /* Default: full width */
+    margin-left: auto; /* Center horizontally */
+    margin-right: auto; /* Center horizontally */
+    padding-left: 1rem; /* Add padding (optional) */
+    padding-right: 1rem; /* Add padding (optional) */
+}
+
+@media (min-width: 640px) {
+    .container {
+        max-width: 640px; /* Small screens */
+    }
+}
+
+@media (min-width: 768px) {
+    .container {
+        max-width: 768px; /* Medium screens */
+    }
+}
+
+@media (min-width: 1024px) {
+    .container {
+        max-width: 1024px; /* Large screens */
+    }
+}
+
+@media (min-width: 1280px) {
+    .container {
+        max-width: 1280px; /* Extra large screens */
+    }
+}
+
+@media (min-width: 1536px) {
+    .container {
+        max-width: 1536px; /* 2XL screens */
+    }
+}
