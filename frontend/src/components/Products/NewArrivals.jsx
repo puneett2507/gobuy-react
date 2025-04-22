@@ -1,10 +1,10 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { GrFormNext } from "react-icons/gr";
 import { GrFormPrevious } from "react-icons/gr";
 import { Link } from "react-router-dom";
 
 const NewArrivals = () => {
-    const scrollRef = useRef();
+    const scrollRef = useRef(null);
     const [isDragging, setIsDragging] = useState(false);
     const [startX, setStartX] = useState(0);
     const [scrollLeft, setScrollLeft] = useState(false);
@@ -61,6 +61,12 @@ const NewArrivals = () => {
         },
     ];
 
+    useEffect(() => {
+        const conatiner = scrollRef.current;
+        console.log(conatiner);
+        console.log(scrollRef);
+    });
+
     return (
         <section>
             <div className="container mx-auto text-center mb-10 relative">
@@ -74,10 +80,10 @@ const NewArrivals = () => {
 
                 {/* scroll buttons */}
                 <div className="absolute right-0 bottom-[-30px] flex space-x-2">
-                    <button className="p-1 rounded-full border">
+                    <button className="p-1 rounded-full border cursor-pointer">
                         <GrFormPrevious className="text-2xl" />
                     </button>
-                    <button className="p-1 rounded-full border">
+                    <button className="p-1 rounded-full border cursor-pointer">
                         <GrFormNext className="text-2xl" />
                     </button>
                 </div>
