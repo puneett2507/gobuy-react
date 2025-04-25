@@ -1,4 +1,6 @@
 import Hero from "../components/Layout/Hero";
+import FeaturedProduct from "../components/Products/FeaturedCollection";
+import FeaturesSection from "../components/Products/FeaturesSection";
 import GenderCollectionSection from "../components/Products/GenderCollectionSection";
 import NewArrivals from "../components/Products/NewArrivals";
 import ProductDetails from "../components/Products/ProductDetails";
@@ -11,8 +13,13 @@ const Home = () => {
       <NewArrivals />
 
       {/* Best seller */}
-      <h2 className="text-center text-3xl font-bold mb-2">Our Best Seller</h2>
       <ProductDetails />
+
+      {/* featured products */}
+      <FeaturedProduct />
+
+      {/* features */}
+      <FeaturesSection />
     </div>
   );
 };

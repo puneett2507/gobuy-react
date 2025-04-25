@@ -107,6 +107,7 @@ const ProductDetails = () => {
 
   return (
     <div className="p-6">
+      <h2 className="text-center text-3xl font-bold mb-2">Our Best Seller</h2>
       <div className="max-w-6xl mx-auto bg-white p-8 rounded-lg">
         <div className="flex flex-col md:flex-row mb-12">
           {/* product thumbnails */}
@@ -206,7 +207,9 @@ const ProductDetails = () => {
                     key={size}
                     onClick={() => setSelectedSize(size)}
                     className={`px-2 py-1 border rounded-xs cursor-pointer ${
-                      selectedSize === size ? "bg-black text-white" : ""
+                      selectedSize === size
+                        ? "bg-black text-white border-black"
+                        : ""
                     }`}
                   >
                     {size}

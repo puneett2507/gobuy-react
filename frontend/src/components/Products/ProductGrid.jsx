@@ -8,7 +8,6 @@ const ProductGrid = ({ products }) => {
         {products.map((product, index) => (
           <Link key={index} to={`product/${product._id}`} className="block">
             <div className="bg-white p-4 rounded-lg">
-              {console.log(product.images.url)}
               {/* product image */}
               <div className="w-full h-96 mb-4">
                 <img
