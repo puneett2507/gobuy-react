@@ -222,13 +222,16 @@ const ProductDetails = () => {
             <div className="mb-4">
               <p className="text-black font-medium text-lg mb-1">Quantity:</p>
               <div className="flex space-x-4 items-center ">
+                {/* decrease button */}
                 <button
                   onClick={() => handleQuantityChange("decrease")}
                   className="py-1 px-2 bg-gray-200 rounded-l-lg text-xl cursor-pointer"
                 >
                   -
                 </button>
+                {/* quantity */}
                 <p className="text-md">{selectedQuantity}</p>
+                {/* increase button */}
                 <button
                   onClick={() => handleQuantityChange("increase")}
                   className="py-1 px-2 bg-gray-200 rounded-r-lg text-lg cursor-pointer"
