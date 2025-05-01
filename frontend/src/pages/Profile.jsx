@@ -1,3 +1,5 @@
+import MyOrders from "./MyOrders";
+
 const Profile = () => {
   return (
     <div className="min-h-screen flex flex-col">
@@ -10,6 +12,11 @@ const Profile = () => {
             <button className="bg-red-500 w-full rounded-lg p-2 text-white text-lg hover:bg-red-400 cursor-pointer">
               Logout
             </button>
+          </div>
+
+          {/* my orders section */}
+          <div className="w-full md:w-2/3 lg:w-3/2">
+            <MyOrders />
           </div>
         </div>
       </div>

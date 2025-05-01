@@ -29,34 +29,42 @@ const similarProducts = [
     _id: 1,
     name: "New Jeans",
     price: 150,
-    images: {
-      url: "https://picsum.photos/500/500?random=3",
-    },
+    images: [
+      {
+        url: "https://picsum.photos/500/500?random=3",
+      },
+    ],
   },
   {
     _id: 2,
     price: 150,
     name: "New Jeans",
-    images: {
-      url: "https://picsum.photos/500/500?random=4",
-      altText: "Image",
-    },
+    images: [
+      {
+        url: "https://picsum.photos/500/500?random=4",
+        altText: "Image",
+      },
+    ],
   },
   {
     _id: 3,
     price: 150,
     name: "New Jeans",
-    images: {
-      url: "https://picsum.photos/500/500?random=5",
-    },
+    images: [
+      {
+        url: "https://picsum.photos/500/500?random=5",
+      },
+    ],
   },
   {
     _id: 4,
     price: 150,
     name: "New Jeans",
-    images: {
-      url: "https://picsum.photos/500/500?random=6",
-    },
+    images: [
+      {
+        url: "https://picsum.photos/500/500?random=6",
+      },
+    ],
   },
 ];
 
@@ -257,6 +265,9 @@ const ProductDetails = () => {
         </div>
 
         {/* similar products */}
+        <h2 className="text-center text-3xl font-bold mb-2">
+          You May Also Like
+        </h2>
         <ProductGrid products={similarProducts} />
       </div>
     </div>

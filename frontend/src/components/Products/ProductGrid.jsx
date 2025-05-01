@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 const ProductGrid = ({ products }) => {
   return (
     <div>
-      <h2 className="text-center text-3xl font-bold mb-2">You May Also Like</h2>
       <div className="grid grid-cols-4">
         {products.map((product, index) => (
           <Link key={index} to={`product/${product._id}`} className="block">
@@ -11,7 +10,7 @@ const ProductGrid = ({ products }) => {
               {/* product image */}
               <div className="w-full h-96 mb-4">
                 <img
-                  src={product.images.url}
+                  src={product.images[0].url}
                   alt=""
                   className="h-full w-full object-cover rounded-lg"
                 />
