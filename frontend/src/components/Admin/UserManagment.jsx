@@ -31,12 +31,16 @@ const UserManagment = () => {
     setFormData({ name: "", email: "", password: "", role: "customer" });
   };
 
+  //  change role function
   const handleRoleChange = (userId, newRole) => {
     console.log({ user: userId, role: newRole });
   };
 
+  //  delete user function
   const handleDeleteUser = (userId) => {
-    console.log("delete", userId);
+    if (window.confirm(`Are you sure you want to delete user ${userId} ?`)) {
+      console.log("delete", userId);
+    }
   };
 
   return (
@@ -117,8 +121,9 @@ const UserManagment = () => {
       {/* user list managment */}
       <div className="overflow-x-auto shadow-md sm:shadow-lg">
         <table className="min-w-full text-left text-gray-800">
-          <thead className="bg-gray-100 uppercase text-gray-700 text-xs">
+          <thead className="bg-gray-100 uppercase text-gray-700 text-sm">
             <tr>
+              <td className="py-3 px-4">ID</td>
               <td className="py-3 px-4">Name</td>
               <td className="py-3 px-4">Email</td>
               <td className="py-3 px-4">Role</td>
@@ -128,6 +133,9 @@ const UserManagment = () => {
           <tbody>
             {users.map((user) => (
               <tr key={user._id} className="border-b hover:bg-gray-100">
+                <td className="p-4 font-medium text-gray-900 whitespace-nowrap">
+                  {user._id}
+                </td>
                 <td className="p-4 font-medium text-gray-900 whitespace-nowrap">
                   {user.name}
                 </td>
