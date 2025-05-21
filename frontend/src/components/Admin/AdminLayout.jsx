@@ -5,7 +5,7 @@ const AdminLayout = () => {
   return (
     <div className="min-h-screen flex flex-col md:flex-row relative">
       <div className=" p-4 bg-black text-white z-50">
-        <Link to="/">
+        <Link to="/admin/">
           <h4 className="uppercase ml-4 font-medium text-2xl mb-4">
             GoBuy admin
           </h4>
