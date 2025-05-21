@@ -6,109 +6,109 @@ const USER_TOKEN = `Bearer ${localStorage.getItem("userToken")}`;
 
 // fetch admin products
 export const fetchAdminProducts = createAsyncThunk(
-  "adminProducts/adminProducts",
-  async () => {
-    const response = await axios.get(`${API_URL}/api/admin/products`, {
-      headers: {
-        Authorization: USER_TOKEN,
-      },
-    });
+	"adminProducts/adminProducts",
+	async () => {
+		const response = await axios.get(`${API_URL}/api/admin/products`, {
+			headers: {
+				Authorization: USER_TOKEN,
+			},
+		});
 
-    return response.data;
-  }
+		return response.data;
+	}
 );
 
 // create new product
 export const newProduct = createAsyncThunk(
-  "adminProducts/createProduct",
-  async (productData) => {
-    const respone = await axios.post(
-      `${API_URL}/api/admin/products`,
-      productData,
-      {
-        headers: {
-          Authorization: USER_TOKEN,
-        },
-      }
-    );
+	"adminProducts/createProduct",
+	async (productData) => {
+		const respone = await axios.post(
+			`${API_URL}/api/admin/products`,
+			productData,
+			{
+				headers: {
+					Authorization: USER_TOKEN,
+				},
+			}
+		);
 
-    return respone.data;
-  }
+		return respone.data;
+	}
 );
 
 // update existing products
 export const updateProduct = createAsyncThunk(
-  "adminProducts/updateProduct",
-  async ({ id, productData }) => {
-    const response = await axios.put(
-      `${API_URL}/api/admin/products/${id}`,
-      productData,
-      {
-        headers: {
-          Authorization: USER_TOKEN,
-        },
-      }
-    );
+	"adminProducts/updateProduct",
+	async ({ id, productData }) => {
+		const response = await axios.put(
+			`${API_URL}/api/admin/products/${id}`,
+			productData,
+			{
+				headers: {
+					Authorization: USER_TOKEN,
+				},
+			}
+		);
 
-    return response.data;
-  }
+		return response.data;
+	}
 );
 
 // delete a product
 export const deleteProduct = createAsyncThunk(
-  "adminProducts/deleteProduct",
-  async (id) => {
-    await axios.delete(`${API_URL}/api/admin/products/${id}`, {
-      headers: {
-        Authorization: USER_TOKEN,
-      },
-    });
+	"adminProducts/deleteProduct",
+	async (id) => {
+		await axios.delete(`${API_URL}/api/admin/products/${id}`, {
+			headers: {
+				Authorization: USER_TOKEN,
+			},
+		});
 
-    return id;
-  }
+		return id;
+	}
 );
 
 const adminProductSlice = createSlice({
-  name: "adminProducts",
-  initialState: {
-    products: [],
-    loading: false,
-    error: null,
-  },
-  reducers: {},
-  extraReducers: (builder) => {
-    builder
-      // fetch products
-      .addCase(fetchAdminProducts.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(fetchAdminProducts.fulfilled, (state, action) => {
-        state.loading = false;
-        state.products = action.payload;
-      })
-      .addCase(fetchAdminProducts.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload.message;
-      })
-      // create new products
-      .addCase(newProduct.fulfilled, (state, action) => {
-        state.products.push(action.payload);
-      })
-      // update product
-      .addCase(updateProduct.fulfilled, (state, action) => {
-        const index = state.products.findIndex(
-          (product) => product._id === action.payload._id
-        );
+	name: "adminProducts",
+	initialState: {
+		products: [],
+		loading: false,
+		error: null,
+	},
+	reducers: {},
+	extraReducers: (builder) => {
+		builder
+			// fetch products
+			.addCase(fetchAdminProducts.pending, (state) => {
+				state.loading = true;
+			})
+			.addCase(fetchAdminProducts.fulfilled, (state, action) => {
+				state.loading = false;
+				state.products = action.payload;
+			})
+			.addCase(fetchAdminProducts.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload.message;
+			})
+			// create new products
+			.addCase(newProduct.fulfilled, (state, action) => {
+				state.products.push(action.payload);
+			})
+			// update product
+			.addCase(updateProduct.fulfilled, (state, action) => {
+				const index = state.products.findIndex(
+					(product) => product._id === action.payload._id
+				);
 
-        if (index !== -1) {
-          state.products[index] = action.payload;
-        }
-      })
-      // delete product
-      .addCase(deleteProduct, (state, action) => {
-        state.products.filter((p) => p._id !== action.payload);
-      });
-  },
+				if (index !== -1) {
+					state.products[index] = action.payload;
+				}
+			})
+			// delete product
+			.addCase(deleteProduct.fulfilled, (state, action) => {
+				state.products = state.products.filter((p) => p._id !== action.payload);
+			});
+	},
 });
 
 export default adminProductSlice.reducer;
