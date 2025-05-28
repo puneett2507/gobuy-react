@@ -4,9 +4,13 @@ import { HiOutlineShoppingBag } from "react-icons/hi2";
 import SearchBar from "./SearchBar";
 import CartDrawer from "../Layout/CartDrawer";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const { cart } = useSelector((state) => state.cart);
+  const cartItemCount =
+    cart.products.reduce((total, product) => total + product.quantity, 0) || 0;
 
   const toggleCartDrawer = () => {
     setDrawerOpen(!drawerOpen);
@@ -28,22 +32,28 @@ const Navbar = () => {
             to="collection/all"
             className="text-gray-700 hover:text-black text-sm font-medium uppercase"
           >
+            All
+          </Link>
+          <Link
+            to="collection/all?gender=Men"
+            className="text-gray-700 hover:text-black text-sm font-medium uppercase"
+          >
             Men
           </Link>
           <Link
-            to="collection/women"
+            to="collection/all?gender=Women"
             className="text-gray-700 hover:text-black text-sm font-medium uppercase"
           >
             Women
           </Link>
           <Link
-            to="collection/top-wear"
+            to="collection/all?category=Top Wear"
             className="text-gray-700 hover:text-black text-sm font-medium uppercase"
           >
             Top Wear
           </Link>
           <Link
-            to="collection/bottom-wear"
+            to="collection/all?category=Bottom Wear"
             className="text-gray-700 hover:text-black text-sm font-medium uppercase"
           >
             Bottom Wear
@@ -60,9 +70,11 @@ const Navbar = () => {
             onClick={toggleCartDrawer}
           >
             <HiOutlineShoppingBag className="h-6 w-6 text-gray-700" />
-            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1 py-0.2">
-              4
-            </span>
+            {cartItemCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1 py-0.2">
+                {cartItemCount}
+              </span>
+            )}
           </button>
 
           {/* search button */}

@@ -9,7 +9,7 @@ const loadCartFromStorage = () => {
 
 // Helper function to save cart to local storage
 const saveCartToStorage = (cart) => {
-  localStorage.setItem("cart", cart);
+  localStorage.setItem("cart", JSON.stringify(cart));
 };
 
 // Fetch cart for user or guest

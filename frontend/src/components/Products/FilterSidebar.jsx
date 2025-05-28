@@ -46,7 +46,7 @@ const FilterSidebar = () => {
     "Fleece",
   ];
 
-  const genders = ["Male", "Female"];
+  const genders = ["Men", "Women"];
 
   const brands = [
     "Nike",

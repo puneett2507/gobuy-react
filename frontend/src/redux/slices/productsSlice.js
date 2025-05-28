@@ -118,7 +118,7 @@ const productSlice = createSlice({
       })
       .addCase(fetchProductsByFilters.fulfilled, (state, action) => {
         state.loading = false;
-        state.error = Array.isArray(action.payload) ? action.payload : [];
+        state.products = Array.isArray(action.payload) ? action.payload : [];
       })
       .addCase(fetchProductsByFilters.rejected, (state, action) => {
         state.loading = false;
