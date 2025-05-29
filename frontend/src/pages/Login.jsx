@@ -4,6 +4,7 @@ import loginImg from "../assets/login.webp";
 import { loginUser } from "../redux/slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { mergeCart } from "../redux/slices/cartSlice";
+import { toast } from "sonner";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -22,17 +23,32 @@ const Login = () => {
     if (user) {
       if (cart?.products?.length > 0 && guestId) {
         dispatch(mergeCart({ user, guestId })).then(() => {
-          navigate(isCheckoutRedirect ? "/checkout" : "/");
+          setTimeout(() => {
+            navigate(isCheckoutRedirect ? "/checkout" : "/");
+          }, 2000);
         });
       } else {
-        navigate(isCheckoutRedirect ? "/checkout" : "/");
+        setTimeout(() => {
+          navigate(isCheckoutRedirect ? "/checkout" : "/");
+        }, 2000);
       }
     }
   }, [user, guestId, cart, navigate, isCheckoutRedirect, dispatch]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(loginUser({ email, password }));
+    dispatch(loginUser({ email, password })).then((response) => {
+      console.log(response);
+      if (response.error) {
+        toast.error(response.payload.message, {
+          duration: 2000,
+        });
+      } else {
+        toast.success("User Logged in Successfully", {
+          duration: 2000,
+        });
+      }
+    });
   };
 
   return (

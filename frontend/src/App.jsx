@@ -25,7 +25,7 @@ function App() {
   return (
     <Provider store={store}>
       <BrowserRouter>
-        <Toaster position="top-right" />
+        <Toaster position="top-right" richColors />
         <Routes>
           {/*User Layout  */}
           <Route path="/" element={<UserLayout />}>

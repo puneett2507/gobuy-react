@@ -1,18 +1,55 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import register from "../assets/register.webp";
 
 import { registerUser } from "../redux/slices/authSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { mergeCart } from "../redux/slices/cartSlice";
+import { toast } from "sonner";
 
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { user, guestId } = useSelector((state) => state.auth);
+  const { cart } = useSelector((state) => state.cart);
+
+  // check redirect parameter
+  const redirect = new URLSearchParams(location.search).get("redirect") || "/";
+  const isCheckoutRedirect = redirect.includes("checkout");
+
+  useEffect(() => {
+    if (user) {
+      if (cart?.products?.length > 0 && guestId) {
+        dispatch(mergeCart({ user, guestId })).then(() => {
+          setTimeout(() => {
+            navigate(isCheckoutRedirect ? "/checkout" : "/");
+          }, 2000);
+        });
+      } else {
+        setTimeout(() => {
+          navigate(isCheckoutRedirect ? "/checkout" : "/");
+        }, 2000);
+      }
+    }
+  }, [user, guestId, cart, navigate, isCheckoutRedirect, dispatch]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(registerUser({ name, email, password }));
+    dispatch(registerUser({ name, email, password })).then((response) => {
+      if (response.error) {
+        toast.error(response.payload.message, {
+          duration: 2000,
+        });
+      } else {
+        toast.success("User Registered Successfully", {
+          duration: 2000,
+        });
+      }
+    });
   };
 
   return (
@@ -70,7 +107,10 @@ const Register = () => {
 
           <p className="text-center text-sm">
             Already have an account?{" "}
-            <Link to="/login" className="text-blue-800">
+            <Link
+              to={`/login?redirect=${encodeURIComponent(redirect)}`}
+              className="text-blue-800"
+            >
               Login here!
             </Link>
           </p>

@@ -36,10 +36,11 @@ router.post("/register", async (req, res) => {
           user: {
             _id: user._id,
             name: user.name,
-            emaiL: user.email,
+            email: user.email,
             role: user.role,
           },
           token,
+          message: "User already exists",
         });
       }
     );
@@ -82,7 +83,7 @@ router.post("/login", async (req, res) => {
           user: {
             _id: user._id,
             name: user.name,
-            emaiL: user.email,
+            email: user.email,
             role: user.role,
           },
           token,
