@@ -100,6 +100,7 @@ const Checkout = () => {
 
   // payment success
   const handlePaymentSuccess = async (details) => {
+    console.log("handlePaymentSuccess");
     try {
       const response = await axios.put(
         `${import.meta.env.VITE_BACKEND_URL}/api/checkout/${checkoutId}/pay`,
@@ -110,11 +111,8 @@ const Checkout = () => {
           },
         }
       );
-      if (response.status === 200) {
-        await handleFinalizeCheckout(checkoutId);
-      } else {
-        console.error(error);
-      }
+
+      await handleFinalizeCheckout(checkoutId);
     } catch (error) {
       console.error(error);
     }
@@ -123,7 +121,9 @@ const Checkout = () => {
   const handleFinalizeCheckout = async (checkoutId) => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/api/checkout/${checkoutId}/pay`,
+        `${
+          import.meta.env.VITE_BACKEND_URL
+        }/api/checkout/${checkoutId}/finalize`,
         {},
         {
           headers: {
@@ -131,11 +131,8 @@ const Checkout = () => {
           },
         }
       );
-      if (response.status === 200) {
-        navigate("/order-confirmation");
-      } else {
-        console.error(error);
-      }
+
+      navigate("/order-confirmation");
     } catch (error) {
       console.error(error);
     }

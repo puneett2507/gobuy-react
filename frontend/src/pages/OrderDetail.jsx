@@ -1,38 +1,20 @@
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
+import { fetchOrderDetails } from "../redux/slices/orderSlice";
 
 export const OrderDetail = () => {
   const { id } = useParams();
-  const [orderDetails, setOrderDetails] = useState(null);
+  // const [orderDetails, setOrderDetails] = useState(null);
+  const dispatch = useDispatch();
+  const { orderDetails, loading, error } = useSelector((state) => state.orders);
 
   useEffect(() => {
-    const mockOrderDetail = {
-      _id: id,
-      createdAt: new Date(),
-      isPaid: true,
-      isDelivered: false,
-      paymentMethod: "PayPal",
-      shippingMethod: "Standard",
-      shippingAddress: { city: "Jaipur", country: "India" },
-      orderItems: [
-        {
-          productId: "1",
-          name: "Shirt",
-          price: 120,
-          quantity: 1,
-          image: "https://picsum.photos/500?random=1",
-        },
-        {
-          productId: "2",
-          name: "Shirt",
-          price: 80,
-          quantity: 3,
-          image: "https://picsum.photos/500?random=2",
-        },
-      ],
-    };
-    setOrderDetails(mockOrderDetail);
-  }, [id]);
+    dispatch(fetchOrderDetails(id));
+  }, [dispatch, id]);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
 
   return (
     <div className="max-w-7xl p-4 mx-auto">
@@ -50,7 +32,8 @@ export const OrderDetail = () => {
               </h3>
               {/* order date */}
               <p className="text-gray-600">
-                {new Date(orderDetails.createdAt).toLocaleDateString()}
+                {new Date(orderDetails.createdAt).toLocaleDateString()} |{" "}
+                {new Date(orderDetails.createdAt).toLocaleTimeString()}
               </p>
             </div>
 

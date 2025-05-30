@@ -1,34 +1,22 @@
-const checkout = {
-  _id: "123",
-  createdAt: new Date(),
-  checkoutItems: [
-    {
-      productId: 1,
-      name: "Jeans",
-      color: "black",
-      size: "M",
-      price: 150,
-      quantity: 1,
-      image: "https://picsum.photos/500?random=1",
-    },
-    {
-      productId: 2,
-      name: "Jacket",
-      color: "Blue",
-      size: "S",
-      price: 25,
-      quantity: 3,
-      image: "https://picsum.photos/500?random=2",
-    },
-  ],
-  shippingAddress: {
-    address: "152/Mansarovar",
-    city: "Jaipur",
-    country: "India",
-  },
-};
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { clearCart } from "../redux/slices/cartSlice";
 
 const OrderConfirmation = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { checkout } = useSelector((state) => state.checkout);
+
+  useEffect(() => {
+    if (checkout && checkout._id) {
+      dispatch(clearCart());
+      localStorage.removeItem("cart");
+    } else {
+      navigate("/my-orders");
+    }
+  }, [checkout, dispatch, navigate]);
+
   // estimate calulator function
   const calculateEstimateDelivery = (createdAt) => {
     const orderDate = new Date(createdAt);
@@ -50,7 +38,7 @@ const OrderConfirmation = () => {
                 Order ID: {checkout._id}
               </h2>
               <p className="text-gray-500">
-                Order Date: {checkout.createdAt.toLocaleDateString()}
+                Order Date: {new Date(checkout.createdAt).toLocaleDateString()}
               </p>
             </div>
 
@@ -68,6 +56,7 @@ const OrderConfirmation = () => {
           <div className="mb-2">
             {checkout.checkoutItems.map((item) => (
               <div key={item.productId} className="flex items-start mb-4">
+                {console.log(item)}
                 <img
                   src={item.image}
                   alt={item.name}

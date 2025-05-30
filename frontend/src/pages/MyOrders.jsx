@@ -1,51 +1,28 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { fetchUserOrders } from "../redux/slices/orderSlice";
 
 const MyOrders = () => {
-  const [orders, setOrders] = useState([]);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { orders, loading, error } = useSelector((state) => state.orders);
 
   useEffect(() => {
-    const mockOrders = [
-      {
-        _id: "12345",
-        createdAt: new Date(),
-        shippingAddress: { city: "New York", country: "USA" },
-        orderItems: [
-          {
-            name: "Product 1",
-            image: "https://picsum.photos/500/500?random=1",
-          },
-        ],
-        totalPrice: 1200,
-        isPaid: true,
-      },
-      {
-        _id: "42325",
-        createdAt: new Date(),
-        shippingAddress: { city: "Delhi", country: "India" },
-        orderItems: [
-          {
-            name: "Product 1",
-            image: "https://picsum.photos/500/500?random=2",
-          },
-        ],
-        totalPrice: 1500,
-        isPaid: false,
-      },
-    ];
-    setOrders(mockOrders);
-  }, []);
+    dispatch(fetchUserOrders());
+  }, [dispatch]);
 
   const handleRowClick = (orderId) => {
     navigate(`/order/${orderId}`);
   };
 
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+
   return (
     <div className="max-w-7xl p-4 mx-auto">
       <h2 className="text-xl font-bold mb-6">My Orders</h2>
       <div className="relative shadow-md overflow-hidden">
-        {console.log(orders)}
         <table className="min-w-full text-left text-gray-500">
           <thead className="bg-gray-100 text-xs uppercase text-gray-700">
             <tr>
