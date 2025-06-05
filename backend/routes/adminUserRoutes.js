@@ -74,13 +74,17 @@ router.delete("/:id", protect, admin, async (req, res) => {
 
     if (user) {
       await user.deleteOne();
-      res.status(200).json({ message: "User deleted successfully" });
+
+      const updatedUsers = await User.find();
+      return res
+        .status(200)
+        .json({ message: "User deleted successfully", users: updatedUsers });
     } else {
-      res.status(400).json({ message: "User not found" });
+      return res.status(400).json({ message: "User not found" });
     }
   } catch (error) {
     console.error("Error fetching users: ", error);
-    res.status(500).json({ message: "Server Error" });
+    return res.status(500).json({ message: "Server Error" });
   }
 });
 

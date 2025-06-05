@@ -1,16 +1,20 @@
-import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { FaUser } from "react-icons/fa";
 import { FaClipboardList } from "react-icons/fa";
 import { FaBoxOpen } from "react-icons/fa";
 import { FaShop } from "react-icons/fa6";
 import { MdLogout } from "react-icons/md";
+import { logout } from "../../redux/slices/authSlice";
+import { clearCart } from "../../redux/slices/cartSlice";
 
 const AdminSidebar = () => {
-  const [isActive, setIsActive] = useState();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleLogout = () => {
+    dispatch(logout());
+    dispatch(clearCart());
     navigate("/");
   };
 

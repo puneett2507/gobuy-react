@@ -1,6 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { fetchProductDetails } from "../../redux/slices/productsSlice";
+import axios from "axios";
+import { updateProduct } from "../../redux/slices/adminProductSlice";
+import { toast } from "sonner";
+import { MdDelete } from "react-icons/md";
 
 const EditProductPage = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { id } = useParams();
+  const { selectedProduct, loading, error } = useSelector(
+    (state) => state.products
+  );
+
   const [productData, setProductData] = useState({
     name: "",
     description: "",
@@ -24,20 +38,76 @@ const EditProductPage = () => {
     ],
   });
 
+  const [updloading, setUploading] = useState(false);
+
+  useEffect(() => {
+    if (id) {
+      dispatch(fetchProductDetails(id));
+    }
+  }, [dispatch, id, navigate]);
+
+  useEffect(() => {
+    if (selectedProduct) {
+      setProductData(selectedProduct);
+    }
+  }, [selectedProduct]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProductData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleImageUpload = (e) => {
+  const handleImageUpload = async (e) => {
     const file = e.target.files[0];
-    console.log(file);
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      setUploading(true);
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/upload`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      setProductData((prevData) => ({
+        ...prevData,
+        images: [
+          ...prevData.images,
+          { url: response.data.imageUrl, altText: "" },
+        ],
+      }));
+      setUploading(false);
+    } catch (error) {
+      console.error(error);
+      setUploading(false);
+    }
+  };
+
+  const handleImageDelete = (index) => {
+    setProductData((prevData) => {
+      const updatedImages = [...prevData.images]; // Clone array
+      updatedImages.splice(index, 1); // Remove image at index
+      return { ...prevData, images: updatedImages };
+    });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(productData);
+    dispatch(updateProduct({ id, productData })).then((response) =>
+      toast.success(response.payload.message, {
+        duration: 2000,
+      })
+    );
+    navigate("/admin/products");
   };
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
 
   return (
     <div className="max-w-5xl p-6 max-auto shadow-md rounded-md">
@@ -160,14 +230,23 @@ const EditProductPage = () => {
             <label className="block font-semibold mb-2">Product Images</label>
             <input type="file" onChange={handleImageUpload} />
 
+            {updloading && <p>Uploading Image...</p>}
             <div className="flex gap-4 mt-4">
               {productData.images.map((image, index) => (
-                <img
-                  key={index}
-                  src={image.url}
-                  alt={image.altText || "Product image"}
-                  className="h-20 w-20 rounded-lg shadow-lg object-cover"
-                />
+                <div key={index} className="relative">
+                  <img
+                    key={index}
+                    src={image.url}
+                    alt={image.altText || "Product image"}
+                    className=" h-20 w-20 rounded-lg shadow-lg object-cover"
+                  />
+                  <span
+                    onClick={() => handleImageDelete(index)}
+                    className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1 py-0.2 cursor-pointer"
+                  >
+                    <MdDelete className="h-4 w-4" />
+                  </span>
+                </div>
               ))}
             </div>
           </div>

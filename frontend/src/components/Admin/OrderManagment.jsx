@@ -1,42 +1,39 @@
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchAllOrders,
+  updateOrderStatus,
+} from "../../redux/slices/adminOrderSlice";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+
 const OrderManagment = () => {
-  const orders = [
-    {
-      _id: 152,
-      user: {
-        name: "John Doe",
-      },
-      totalPrice: 500,
-      status: "Processing",
-    },
-    {
-      _id: 2,
-      user: {
-        name: "Doe",
-      },
-      totalPrice: 500,
-      status: "Processing",
-    },
-    {
-      _id: 52,
-      user: {
-        name: "John ",
-      },
-      totalPrice: 500,
-      status: "Processing",
-    },
-    {
-      _id: 15,
-      user: {
-        name: "John Doe",
-      },
-      totalPrice: 500,
-      status: "Processing",
-    },
-  ];
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { user } = useSelector((state) => state.auth);
+  const { orders, loading, error } = useSelector((state) => state.adminOrders);
+
+  useEffect(() => {
+    if (user && user.role !== "admin") {
+      navigate("/");
+    } else {
+      dispatch(fetchAllOrders());
+    }
+  }, [dispatch, user, navigate]);
 
   const handleStatusChange = (orderId, newStatus) => {
-    console.log({ id: orderId, status: newStatus });
+    dispatch(updateOrderStatus({ id: orderId, status: newStatus })).then(
+      (response) => {
+        toast.success(response.payload.message, {
+          duration: 2000,
+        });
+      }
+    );
   };
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
 
   return (
     <div className="max-w-7xl max-auto">
@@ -58,10 +55,12 @@ const OrderManagment = () => {
               orders.map((order) => (
                 <tr key={order._id} className="border-b hover:bg-gray-100">
                   <td className="py-3 px-4 font-medium whitespace-nowrap text-gray-900">
-                    #{order._id}
+                    #{order?._id}
                   </td>
-                  <td className="py-3 px-4">{order.user.name}</td>
-                  <td className="py-3 px-4">${order.totalPrice}</td>
+                  <td className="py-3 px-4">{order?.user?.name}</td>
+                  <td className="py-3 px-4">
+                    ${order?.totalPrice?.toFixed(2)}
+                  </td>
                   <td className="py-3 px-4">
                     <select
                       name="status"
@@ -73,13 +72,13 @@ const OrderManagment = () => {
                     >
                       <option value="processing">Processing</option>
                       <option value="shipping">Shipped</option>
-                      <option value="delivered">Delivered</option>
-                      <option value="cancelled">Cancelled</option>
+                      <option value="Delivered">Delivered</option>
+                      <option value="Cancelled">Cancelled</option>
                     </select>
                   </td>
                   <td className="py-3 px-4">
                     <button
-                      onClick={() => handleStatusChange(order._id, "delivered")}
+                      onClick={() => handleStatusChange(order._id, "Delivered")}
                       className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
                     >
                       Mark as Delivered

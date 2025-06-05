@@ -9,7 +9,7 @@ const router = express.Router();
 // @access Private/Admin only
 router.get("/", protect, admin, async (req, res) => {
   try {
-    let orders = await Order.find({});
+    let orders = await Order.find({}).populate("user", "name email");
     res.json(orders);
   } catch (error) {
     console.error("Error fetching users: ", error);
@@ -22,7 +22,10 @@ router.get("/", protect, admin, async (req, res) => {
 // @access Private/Admin only
 router.put("/:id", protect, admin, async (req, res) => {
   try {
-    let order = await Order.findById(req.params.id);
+    let order = await Order.findById(req.params.id).populate(
+      "user",
+      "name email"
+    );
 
     if (order) {
       order.status = req.body.status || order.status;

@@ -1,45 +1,37 @@
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  deleteProduct,
+  fetchAdminProducts,
+} from "../../redux/slices/adminProductSlice";
+import { toast } from "sonner";
 
 const ProductManagment = () => {
-  const products = [
-    {
-      _id: 1232,
-      name: "Shirt",
-      price: 10,
-      sku: "325632",
-    },
-    {
-      _id: 232,
-      name: "Shirt",
-      price: 10,
-      sku: "325632",
-    },
-    {
-      _id: 32,
-      name: "Shirt",
-      price: 10,
-      sku: "325632",
-    },
-    {
-      _id: 12,
-      name: "Shirt",
-      price: 10,
-      sku: "325632",
-    },
-    {
-      _id: 2,
-      name: "Shirt",
-      price: 10,
-      sku: "325632",
-    },
-  ];
+  const disptach = useDispatch();
+  const navigate = useNavigate();
+  const { user } = useSelector((state) => state.auth);
+  const { products, loading, error } = useSelector(
+    (state) => state.adminProducts
+  );
+
+  useEffect(() => {
+    disptach(fetchAdminProducts());
+  }, [disptach, user, navigate]);
 
   //  delete product function
   const handleDeleteProduct = (productId) => {
     if (window.confirm(`Are you sure you want to delete user ${productId} ?`)) {
-      console.log("delete", productId);
+      disptach(deleteProduct(productId)).then((response) => {
+        toast.success(response.payload.message, {
+          duration: 2000,
+        });
+      });
     }
   };
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
 
   return (
     <div className="max-w-7xl max-auto">
@@ -67,7 +59,7 @@ const ProductManagment = () => {
                   <td className="p-4 font-medium text-gray-900 whitespace-nowrap">
                     {product.name}
                   </td>
-                  <td className="p-4">{product.price}</td>
+                  <td className="p-4">${product.price}</td>
                   <td className="p-4">{product.sku}</td>
                   <td className="p-4">
                     <Link

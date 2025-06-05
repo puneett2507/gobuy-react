@@ -118,7 +118,10 @@ router.put("/:id", protect, admin, async (req, res) => {
     }
 
     const updatedProduct = await product.save();
-    res.json(updatedProduct);
+    res.json({
+      message: "Product updated successfully!",
+      product: updatedProduct,
+    });
   } catch (error) {
     console.log("Error: ", error);
     res.status(500).json({ message: "Error updating product", error: error });
@@ -135,7 +138,12 @@ router.delete("/:id", protect, admin, async (req, res) => {
 
     if (product) {
       await product.deleteOne();
-      res.json({ message: "Product deleted successfully" });
+
+      const updatedProducts = await Product.find();
+      res.json({
+        message: "Product deleted successfully",
+        products: updatedProducts,
+      });
     } else {
       res.status(400).json({ message: "Product not found" });
     }

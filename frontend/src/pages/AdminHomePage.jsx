@@ -1,67 +1,65 @@
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { fetchAllOrders } from "../redux/slices/adminOrderSlice";
+import { fetchAdminProducts } from "../redux/slices/adminProductSlice";
 
 const AdminHomePage = () => {
-  const orders = [
-    {
-      _id: 12151,
-      user: {
-        name: "John Doe",
-      },
-      totalPrice: 110,
-      status: "Processing",
-    },
-    {
-      _id: 2151,
-      user: {
-        name: "John Doe",
-      },
-      totalPrice: 110,
-      status: "Processing",
-    },
-    {
-      _id: 151,
-      user: {
-        name: "John Doe",
-      },
-      totalPrice: 110,
-      status: "Processing",
-    },
-    {
-      _id: 121,
-      user: {
-        name: "John Doe",
-      },
-      totalPrice: 110,
-      status: "Processing",
-    },
-  ];
+  const dispatch = useDispatch();
+  const {
+    products,
+    loading: productsLoading,
+    error: productsError,
+  } = useSelector((state) => state.adminProducts);
+  const {
+    orders,
+    loading: ordersLoading,
+    error: ordersError,
+    totalOrders,
+    totalSales,
+  } = useSelector((state) => state.adminOrders);
+
+  useEffect(() => {
+    dispatch(fetchAdminProducts());
+    dispatch(fetchAllOrders());
+  }, [dispatch]);
 
   return (
     <div className="max-w-7xl mx-auto">
       <h4 className="uppercase ml-4 font-medium text-2xl mb-4">
         Admin dashboard
       </h4>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div className="p-4 shadow-md rounded-lg">
-          <h2 className="text-lg font-semibold">Revenue</h2>
-          <p className="text-xl">$10000</p>
+      {productsLoading || ordersLoading ? (
+        <p>Loading...</p>
+      ) : productsError ? (
+        <p className="text-red-500">Error fetching products: {productsError}</p>
+      ) : ordersError ? (
+        <p className="text-red-500">Error fetching Orders: {ordersError}</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="p-4 shadow-md rounded-lg">
+            <h2 className="text-lg font-semibold">Revenue</h2>
+            <p className="text-xl">${totalSales.toFixed(2)}</p>
+          </div>
+          <div className="p-4 shadow-md rounded-lg">
+            <h2 className="text-lg font-semibold">Total Orders</h2>
+            <p className="text-xl">{totalOrders}</p>
+            <Link to="/admin/orders" className="text-blue-500 hover:underline">
+              Manage Orders
+            </Link>
+          </div>
+          <div className="p-4 shadow-md rounded-lg">
+            <h2 className="text-lg font-semibold">Total Products</h2>
+            <p className="text-xl">{products.length}</p>
+            <Link
+              to="/admin/products"
+              className="text-blue-500 hover:underline"
+            >
+              Manage Products
+            </Link>
+          </div>
         </div>
-        <div className="p-4 shadow-md rounded-lg">
-          <h2 className="text-lg font-semibold">Total Orders</h2>
-          <p className="text-xl">200</p>
-          <Link to="/admin/orders" className="text-blue-500 hover:underline">
-            Manage Orders
-          </Link>
-        </div>
-        <div className="p-4 shadow-md rounded-lg">
-          <h2 className="text-lg font-semibold">Total Products</h2>
-          <p className="text-xl">$10000</p>
-          <Link to="/admin/products" className="text-blue-500 hover:underline">
-            Manage Products
-          </Link>
-        </div>
-      </div>
+      )}
 
       {/* recent orders */}
       <div className="mt-6">
@@ -84,10 +82,10 @@ const AdminHomePage = () => {
                     key={order._id}
                     className="border-b hover:bg-gray-50 cursor-pointer"
                   >
-                    <td className="p-4">{order._id}</td>
-                    <td className="p-4">{order.user.name}</td>
-                    <td className="p-4">{order.totalPrice}</td>
-                    <td className="p-4">{order.status}</td>
+                    <td className="p-4">{order?._id}</td>
+                    <td className="p-4">{order?.user?.name}</td>
+                    <td className="p-4">${order?.totalPrice?.toFixed(2)}</td>
+                    <td className="p-4">{order?.status}</td>
                   </tr>
                 ))
               ) : (

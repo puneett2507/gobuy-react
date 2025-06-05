@@ -32,7 +32,7 @@ export const addUser = createAsyncThunk(
       return response.data;
     } catch (error) {
       console.error(error);
-      return rejectWithValue(error.response.message);
+      return rejectWithValue(error.response.data.message);
     }
   }
 );
@@ -50,14 +50,13 @@ export const updateUser = createAsyncThunk(
         },
       }
     );
-
     return response.data;
   }
 );
 
 // delete User
 export const deleteUser = createAsyncThunk("admin/deleteUser", async (id) => {
-  await axios.delete(
+  const response = await axios.delete(
     `${import.meta.env.VITE_BACKEND_URL}/api/admin/users/${id}`,
     {
       headers: {
@@ -65,7 +64,7 @@ export const deleteUser = createAsyncThunk("admin/deleteUser", async (id) => {
       },
     }
   );
-  return id;
+  return response.data;
 });
 
 const adminSlice = createSlice({
@@ -97,7 +96,7 @@ const adminSlice = createSlice({
       })
       .addCase(addUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.users.push(action.payload.users);
+        state.users.push(action.payload.user);
       })
       .addCase(addUser.rejected, (state, action) => {
         state.loading = false;
@@ -107,7 +106,7 @@ const adminSlice = createSlice({
       // update user
       .addCase(updateUser.fulfilled, (state, action) => {
         state.loading = false;
-        const updatedUser = action.payload;
+        const updatedUser = action.payload.updatedUser;
         const userIndex = state.users.findIndex(
           (user) => user._id === updatedUser._id
         );
@@ -118,10 +117,16 @@ const adminSlice = createSlice({
       })
 
       // delete user
+      .addCase(deleteUser.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(deleteUser.fulfilled, (state, action) => {
-        state.users = state.users.filter(
-          (user) => user._id !== action.payload._id
-        );
+        state.loading = false;
+        state.users = action.payload.users;
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
       });
   },
 });

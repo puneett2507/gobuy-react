@@ -1,14 +1,27 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import {
+  addUser,
+  deleteUser,
+  fetchUsers,
+  updateUser,
+} from "../../redux/slices/adminSlice";
 
 const UserManagment = () => {
-  const users = [
-    {
-      _id: 32,
-      name: "John Doe",
-      email: "john.doe@gmail.com",
-      role: "admin",
-    },
-  ];
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { user } = useSelector((state) => state.auth);
+  const { users, loading, error } = useSelector((state) => state.admin);
+
+  useEffect(() => {
+    if (user && user.role !== "admin") {
+      navigate("/");
+    } else {
+      dispatch(fetchUsers());
+    }
+  }, [dispatch, user, navigate]);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -26,6 +39,17 @@ const UserManagment = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    dispatch(addUser(formData)).then((response) => {
+      if (response.error) {
+        toast.error(response.payload, {
+          duration: 2000,
+        });
+      } else {
+        toast.success(response.payload.message, {
+          duration: 2000,
+        });
+      }
+    });
 
     // reset form
     setFormData({ name: "", email: "", password: "", role: "customer" });
@@ -33,19 +57,29 @@ const UserManagment = () => {
 
   //  change role function
   const handleRoleChange = (userId, newRole) => {
-    console.log({ user: userId, role: newRole });
+    dispatch(updateUser({ id: userId, role: newRole })).then((response) => {
+      toast.success(response.payload.message, {
+        duration: 2000,
+      });
+    });
   };
 
   //  delete user function
   const handleDeleteUser = (userId) => {
     if (window.confirm(`Are you sure you want to delete user ${userId} ?`)) {
-      console.log("delete", userId);
+      dispatch(deleteUser(userId)).then((response) => {
+        toast.success(response.payload.message, {
+          duration: 2000,
+        });
+      });
     }
   };
 
   return (
     <div className="max-w-7xl max-auto">
       <h2 className="text-2xl font-semibold mb-4">User Managment</h2>
+      {loading && <p>Loading...</p>}
+      {error && <p>Error...{error}</p>}
 
       {/* form for new user */}
       <div className="p-6 mb-6 rounded-lg">
@@ -132,17 +166,17 @@ const UserManagment = () => {
           </thead>
           <tbody>
             {users.map((user) => (
-              <tr key={user._id} className="border-b hover:bg-gray-100">
+              <tr key={user?._id} className="border-b hover:bg-gray-100">
                 <td className="p-4 font-medium text-gray-900 whitespace-nowrap">
-                  {user._id}
+                  {user?._id}
                 </td>
                 <td className="p-4 font-medium text-gray-900 whitespace-nowrap">
-                  {user.name}
+                  {user?.name}
                 </td>
-                <td className="p-4">{user.email}</td>
+                <td className="p-4">{user?.email}</td>
                 <td className="p-4">
                   <select
-                    value={user.role}
+                    value={user?.role}
                     onChange={(e) => handleRoleChange(user._id, e.target.value)}
                     className="p-2 border rounded"
                   >
