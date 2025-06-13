@@ -17,7 +17,7 @@ const ProductGrid = ({ products }) => {
               {/* product image */}
               <div className="w-full h-96 mb-4">
                 <img
-                  src={product.images[0].url}
+                  src={product.images[0]?.url}
                   alt=""
                   className="h-full w-full object-cover rounded-lg"
                 />

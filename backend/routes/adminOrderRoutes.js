@@ -56,7 +56,11 @@ router.delete("/:id", protect, admin, async (req, res) => {
 
     if (order) {
       await order.deleteOne();
-      return res.status(200).json({ message: "Order deleted successfully" });
+
+      let updatedOrders = await Order.find();
+      return res
+        .status(200)
+        .json({ message: "Order deleted successfully", orders: updatedOrders });
     } else {
       return res.status(400).json({ message: "Order not found" });
     }

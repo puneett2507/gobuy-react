@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  deleteOrder,
   fetchAllOrders,
   updateOrderStatus,
 } from "../../redux/slices/adminOrderSlice";
@@ -30,6 +31,18 @@ const OrderManagment = () => {
         });
       }
     );
+  };
+
+  const handleOrderDelete = (orderId) => {
+    console.log("orderId", orderId);
+    if (window.confirm(`Are you sure you want to delete user ${orderId} ?`)) {
+      dispatch(deleteOrder(orderId)).then((response) => {
+        toast.success(response.payload.message, {
+          duration: 2000,
+        });
+      });
+    }
+    1;
   };
 
   if (loading) return <p>Loading...</p>;
@@ -76,12 +89,18 @@ const OrderManagment = () => {
                       <option value="Cancelled">Cancelled</option>
                     </select>
                   </td>
-                  <td className="py-3 px-4">
+                  <td className="py-3 px-4 flex gap-5">
                     <button
                       onClick={() => handleStatusChange(order._id, "Delivered")}
                       className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
                     >
                       Mark as Delivered
+                    </button>
+                    <button
+                      onClick={() => handleOrderDelete(order._id)}
+                      className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                    >
+                      Delete
                     </button>
                   </td>
                 </tr>

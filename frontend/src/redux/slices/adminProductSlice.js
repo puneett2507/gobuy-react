@@ -21,18 +21,22 @@ export const fetchAdminProducts = createAsyncThunk(
 // create new product
 export const newProduct = createAsyncThunk(
   "adminProducts/createProduct",
-  async (productData) => {
-    const respone = await axios.post(
-      `${API_URL}/api/admin/products`,
-      productData,
-      {
-        headers: {
-          Authorization: USER_TOKEN,
-        },
-      }
-    );
+  async (productData, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        `${API_URL}/api/admin/products`,
+        productData,
+        {
+          headers: {
+            Authorization: USER_TOKEN,
+          },
+        }
+      );
 
-    return respone.data;
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
   }
 );
 
@@ -94,10 +98,18 @@ const adminProductSlice = createSlice({
         state.loading = false;
         state.error = action.payload.message;
       })
+
       // create new products
+      .addCase(newProduct.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(newProduct.fulfilled, (state, action) => {
         state.products.push(action.payload);
       })
+      .addCase(newProduct.rejected, (state) => {
+        state.loading = false;
+      })
+
       // update product
       .addCase(updateProduct.fulfilled, (state, action) => {
         const index = state.products.findIndex(

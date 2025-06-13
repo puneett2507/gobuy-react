@@ -38,10 +38,11 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/checkout", checkoutRoutes);
 //order routes
 app.use("/api/orders", orderRoutes);
-// upload routes
-app.use("/api/upload", uploadRoutes);
 // subscriber routes
 app.use("/api", subscriberRoutes);
+
+// upload routes
+app.use("/api/upload", uploadRoutes);
 
 // admin user routes
 app.use("/api/admin/users", adminUserRoutes);

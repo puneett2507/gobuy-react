@@ -190,7 +190,7 @@ const FilterSidebar = () => {
               checked={filters.size.includes(size)}
               className="mr-2 h-4 w-4 border border-gray-300 accent-blue-500 focus:ring-blue-400"
             />{" "}
-            <span>{size}</span>
+            <span className="text-gray-800 text-sm">{size}</span>
           </div>
         ))}
       </div>
@@ -208,7 +208,7 @@ const FilterSidebar = () => {
               checked={filters.material.includes(material)}
               className="mr-2 h-4 w-4 border border-gray-300 accent-blue-500 focus:ring-blue-400"
             />{" "}
-            <span>{material}</span>
+            <span className="text-gray-800 text-sm">{material}</span>
           </div>
         ))}
       </div>
@@ -226,7 +226,7 @@ const FilterSidebar = () => {
               checked={filters.brand.includes(brand)}
               className="mr-2 h-4 w-4 border border-gray-300 accent-blue-500 focus:ring-blue-400"
             />{" "}
-            <span>{brand}</span>
+            <span className="text-gray-800 text-sm">{brand}</span>
           </div>
         ))}
       </div>

@@ -20,7 +20,7 @@ const CollectionPage = () => {
   return (
     <div className="flex flex-col lg:flex-row">
       {/* sidebar filter */}
-      <div className="fixed inset-y-0 z-50 lg:static lg:translate-x-0 left-0 w-64 bg-white overflow-y-auto">
+      <div className="fixed inset-y-0 z-50 lg:static lg:translate-x-0 left-0 md:w-80 sm:w-16 bg-white overflow-y-auto">
         <FilterSidebar />
       </div>
 

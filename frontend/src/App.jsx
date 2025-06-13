@@ -20,6 +20,7 @@ import EditProductPage from "./components/Admin/EditProductPage";
 
 import { Provider } from "react-redux";
 import store from "./redux/store";
+import AddProductPage from "./components/Admin/AddProductPage";
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
             <Route path="orders" element={<OrderManagment />} />
             <Route path="products" element={<ProductManagment />} />
             <Route path="products/:id/edit" element={<EditProductPage />} />
+            <Route path="products/add" element={<AddProductPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

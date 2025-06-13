@@ -53,7 +53,7 @@ export const deleteOrder = createAsyncThunk(
   "admin/deleteOrder",
   async (id, { rejectWithValue }) => {
     try {
-      await axios.delete(
+      const response = await axios.delete(
         `${import.meta.env.VITE_BACKEND_URL}/api/admin/orders/${id}`,
         {
           headers: {
@@ -62,7 +62,7 @@ export const deleteOrder = createAsyncThunk(
         }
       );
 
-      return id;
+      return response.data;
     } catch (error) {
       console.error(error);
       return rejectWithValue(error.response.data);
@@ -116,9 +116,7 @@ const adminOrderSlice = createSlice({
 
       // Delete Order
       .addCase(deleteOrder.fulfilled, (state, action) => {
-        state.orders = state.orders.filter(
-          (order) => order._id !== action.payload
-        );
+        state.orders = action.payload.orders;
       });
   },
 });

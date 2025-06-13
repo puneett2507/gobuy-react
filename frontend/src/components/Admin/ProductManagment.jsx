@@ -1,11 +1,14 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { FaRegEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
 import {
   deleteProduct,
   fetchAdminProducts,
 } from "../../redux/slices/adminProductSlice";
 import { toast } from "sonner";
+import Navigation from "../Common/Navigation";
 
 const ProductManagment = () => {
   const disptach = useDispatch();
@@ -21,7 +24,9 @@ const ProductManagment = () => {
 
   //  delete product function
   const handleDeleteProduct = (productId) => {
-    if (window.confirm(`Are you sure you want to delete user ${productId} ?`)) {
+    if (
+      window.confirm(`Are you sure you want to delete product "${productId}" ?`)
+    ) {
       disptach(deleteProduct(productId)).then((response) => {
         toast.success(response.payload.message, {
           duration: 2000,
@@ -36,6 +41,16 @@ const ProductManagment = () => {
   return (
     <div className="max-w-7xl max-auto">
       <h2 className="text-2xl font-semibold mb-4">Product Managment</h2>
+      <Navigation pageRoute={`/admin`} pageName={"Dashboard"} />
+
+      <div className="flex flex-row-reverse mb-4">
+        <Link
+          to={`/admin/products/add`}
+          className="bg-blue-500 p-2 rounded-lg text-white cursor-pointer hover:bg-blue-600"
+        >
+          Add product
+        </Link>
+      </div>
 
       {/* order table */}
       <div className="overflow-x-auto shadow-md rounded-lg">
@@ -43,6 +58,7 @@ const ProductManagment = () => {
           <thead className="bg-gray-100 uppercase text-gray-700 text-sm">
             <tr>
               <td className="py-3 px-4">ID</td>
+              <td className="py-3 px-4">Image</td>
               <td className="py-3 px-4">Name</td>
               <td className="py-3 px-4">Price</td>
               <td className="py-3 px-4">SKU</td>
@@ -52,27 +68,39 @@ const ProductManagment = () => {
           <tbody>
             {products.length > 0 ? (
               products.map((product) => (
-                <tr key={product._id} className="border-b hover:bg-gray-100">
-                  <td className="p-4 font-medium text-gray-900 whitespace-nowrap">
+                <tr
+                  key={product._id}
+                  className="border-b hover:bg-gray-100 h-25"
+                >
+                  <td className="p-4 font-medium text-gray-900 w-10">
                     {product._id}
+                  </td>
+                  <td className="p-4 font-medium text-gray-900">
+                    {/* {product.images[0].url} */}
+                    <img
+                      className="h-20 w-20 rounded-lg"
+                      src={product.images[0]?.url}
+                      alt={product.name}
+                    />
                   </td>
                   <td className="p-4 font-medium text-gray-900 whitespace-nowrap">
                     {product.name}
                   </td>
-                  <td className="p-4">${product.price}</td>
-                  <td className="p-4">{product.sku}</td>
-                  <td className="p-4">
+                  <td className="p-4">${product?.price}</td>
+                  <td className="p-4">{product?.sku}</td>
+                  {/* <td className="p-4 grid grid-cols-2 gap-4"> */}
+                  <td className="p-4 flex flex-row ">
                     <Link
                       to={`/admin/products/${product._id}/edit`}
-                      className="px-4 py-2 rounded-lg text-white bg-yellow-400 hover:bg-yellow-500 mr-4"
+                      className="p-2 rounded-lg "
                     >
-                      Edit
+                      <FaRegEdit className="h-6 w-6 hover:text-gray-600" />
                     </Link>
                     <button
-                      className="bg-red-500 hover:bg-red-600 text-white rounded-lg px-4 py-2"
-                      onClick={() => handleDeleteProduct(product._id)}
+                      className="p-2"
+                      onClick={() => handleDeleteProduct(product.name)}
                     >
-                      Delete
+                      <MdDelete className="h-6 w-6 text-red-500 hover:text-red-600 cursor-pointer" />
                     </button>
                   </td>
                 </tr>
